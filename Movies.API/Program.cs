@@ -13,7 +13,15 @@ namespace Movies.API
     {
         public static void Main(string[] args)
         {
-            CreateHostBuilder(args).Build().Run();
+            var host = CreateHostBuilder(args).Build();
+            SeedDataBase(host);
+            host.Run();
+           // CreateHostBuilder(args).Build().Run();
+        }
+
+        private static void SeedDataBase(IHost host)
+        {
+            throw new NotImplementedException();
         }
 
         public static IHostBuilder CreateHostBuilder(string[] args) =>
