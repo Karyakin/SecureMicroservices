@@ -35,7 +35,7 @@ namespace Movies.API
                 c.SwaggerDoc("v1", new OpenApiInfo { Title = "Movies.API", Version = "v1" });
             });
              
-            services.AddDbContext<MoviesAPIContext>(options =>
+            services.AddDbContext<MoviesApiContext>(options =>
                     options.UseInMemoryDatabase("Movies"));
                     //options.UseSqlServer(Configuration.GetConnectionString("MoviesAPIContext")));
         }

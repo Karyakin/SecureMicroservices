@@ -6,7 +6,7 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Movies.API.Data;
-using Movies.API.Model;
+using Movies.API.Models;
 
 namespace Movies.API.Controllers
 {
@@ -14,9 +14,9 @@ namespace Movies.API.Controllers
     [ApiController]
     public class MoviesController : ControllerBase
     {
-        private readonly MoviesAPIContext _context;
+        private readonly MoviesApiContext _context;
 
-        public MoviesController(MoviesAPIContext context)
+        public MoviesController(MoviesApiContext context)
         {
             _context = context;
         }

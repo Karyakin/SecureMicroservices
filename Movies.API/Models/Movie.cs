@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace Movies.API.Model
+namespace Movies.API.Models
 {
     public class Movie
     {
