@@ -41,7 +41,7 @@ namespace IdentityServer
                     // where to redirect to after logout
                     PostLogoutRedirectUris = new List<string>()
                     {
-                        "https://localhost:5002/signout-callback-oidc"
+                         "https://localhost:5002/signout-callback-oidc"
                     },
 
                     ClientSecrets = new List<Secret>()

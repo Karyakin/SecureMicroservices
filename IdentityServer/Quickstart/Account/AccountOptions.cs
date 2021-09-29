@@ -13,7 +13,7 @@ namespace IdentityServer.Quickstart.Account
         public static TimeSpan RememberMeLoginDuration = TimeSpan.FromDays(30);
 
         public static bool ShowLogoutPrompt = true;
-        public static bool AutomaticRedirectAfterSignOut = false;
+        public static bool AutomaticRedirectAfterSignOut = true;//перенаправление при логауте
 
         public static string InvalidCredentialsErrorMessage = "Invalid username or password";
     }
