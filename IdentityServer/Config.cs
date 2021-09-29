@@ -29,6 +29,42 @@ namespace IdentityServer
                 {
                     ClientId = "movies_mvc_client",
                     ClientName = "movies Mvc web App",
+                    AllowedGrantTypes = GrantTypes.Hybrid,
+                    RequirePkce = false,
+                    AllowRememberConsent = false,
+
+                    // where to redirect to after login
+                    RedirectUris =new List<string>()
+                    {
+                        "https://localhost:5002/signin-oidc" // this is client app port
+                    },
+
+                    // where to redirect to after logout
+                    PostLogoutRedirectUris = new List<string>()
+                    {
+                        "https://localhost:5002/signout-callback-oidc"
+                    },
+
+                    ClientSecrets = new List<Secret>()
+                    {
+                        new Secret("secret".Sha256())
+                    },
+
+                    AllowedScopes = new List<string>
+                    {
+                        IdentityServerConstants.StandardScopes.OpenId,
+                        IdentityServerConstants.StandardScopes.Profile,
+                        IdentityServerConstants.StandardScopes.Email,
+                        IdentityServerConstants.StandardScopes.Address
+                        ,"movieAPI"
+                        ,"roles"
+                    }
+                }
+
+               /* new Client
+                {
+                    ClientId = "movies_mvc_client",
+                    ClientName = "movies Mvc web App",
                     AllowedGrantTypes = GrantTypes.Code,
                     AllowRememberConsent = false,
 
@@ -55,7 +91,7 @@ namespace IdentityServer
                         IdentityServerConstants.StandardScopes.Profile
                     //    ,"api1"
                     }
-                }
+                }*/
             };
         public static IEnumerable<ApiScope> ApiScopes =>
             new ApiScope[]
@@ -73,8 +109,14 @@ namespace IdentityServer
             new IdentityResource[]
             {
                 new IdentityResources.OpenId(),
+                new IdentityResources.Profile(),
                 new IdentityResources.Email(),
-                new IdentityResources.Profile()
+                new IdentityResources.Address(),
+                new IdentityResource(
+                    "roles",
+                    "Your role(s)",
+                    new List<string>(){ "role" }
+                    )
 
             };
         public static List<TestUser> TestUsers =>

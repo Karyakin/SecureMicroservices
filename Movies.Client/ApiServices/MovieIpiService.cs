@@ -128,5 +128,10 @@ namespace Movies.Client.ApiServices
         {
             throw new NotImplementedException();
         }
+
+        public string GetUserInfo()
+        {
+            throw new NotImplementedException();
+        }
     }
 }

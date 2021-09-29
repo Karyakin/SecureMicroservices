@@ -7,6 +7,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using IdentityServer.Quickstart;
 using IdentityServer4.Models;
 using IdentityServer4.Test;
 
@@ -24,7 +25,7 @@ namespace IdentityServer
                 .AddInMemoryIdentityResources(Config.IdentityResources)
                 //.AddInMemoryApiResources(Config.ApiResources)
                 .AddInMemoryApiScopes(Config.ApiScopes)
-                .AddTestUsers(Config.TestUsers)
+                .AddTestUsers(/*Config.*/TestUsers.Users)
                 .AddDeveloperSigningCredential();
         }
 
