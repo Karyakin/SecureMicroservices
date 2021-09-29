@@ -87,10 +87,12 @@ namespace IdentityServer
                      Password = "123",
                      Claims = new List<Claim>()
                      {
-                         new Claim(JwtClaimTypes.GivenName,"Dmitry"),
+                         new Claim(JwtClaimTypes.GivenName,"Dmitry1"),
                          new Claim(JwtClaimTypes.FamilyName,"Karyakin")
                          ,new Claim(JwtClaimTypes.EmailVerified,"VovaMi6a@Gmail.com")
                          ,new Claim(JwtClaimTypes.Email,"VovaMi6a@Gmail.com")
+                         ,new Claim(JwtClaimTypes.Address,"papapa")
+
                      }
 
                 }

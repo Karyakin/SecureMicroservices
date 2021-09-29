@@ -8,6 +8,8 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Authentication.Cookies;
+using Microsoft.AspNetCore.Authentication.OpenIdConnect;
 using Microsoft.EntityFrameworkCore;
 using Movies.Client.ApiServices;
 using Movies.Client.Data;
@@ -28,9 +30,31 @@ namespace Movies.Client
         {
             services.AddControllersWithViews();
             services.AddScoped<IMovieIpiService, MovieIpiService>();
+            services.AddAuthentication(options =>
+            {
+                options.DefaultScheme = CookieAuthenticationDefaults.AuthenticationScheme;
+                options.DefaultChallengeScheme = OpenIdConnectDefaults.AuthenticationScheme;
+            })
+            .AddCookie(CookieAuthenticationDefaults.AuthenticationScheme)
+            .AddOpenIdConnect(OpenIdConnectDefaults.AuthenticationScheme, options =>
+            {
+                options.Authority = "https://localhost:5005";
 
-           /* services.AddDbContext<MoviesClientContext>(options =>
-                    options.UseSqlServer(Configuration.GetConnectionString("MoviesClientContext")));*/
+                options.ClientId = "movies_mvc_client";
+                options.ClientSecret = "secret";
+                options.ResponseType = "code";
+
+                options.Scope.Add("openid");
+                options.Scope.Add("profile");
+
+                options.SaveTokens = true;
+
+                options.GetClaimsFromUserInfoEndpoint = true;
+            });
+
+
+            /* services.AddDbContext<MoviesClientContext>(options =>
+                     options.UseSqlServer(Configuration.GetConnectionString("MoviesClientContext")));*/
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -51,6 +75,7 @@ namespace Movies.Client
 
             app.UseRouting();
 
+            app.UseAuthentication();
             app.UseAuthorization();
 
             app.UseEndpoints(endpoints =>
