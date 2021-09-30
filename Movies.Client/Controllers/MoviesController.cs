@@ -186,9 +186,9 @@ namespace Movies.Client.Controllers
         }
 
         [Authorize(Roles = "admin")]
-        public IActionResult OnlyAdmin()
+        public async Task<IActionResult> OnlyAdmin()
         {
-            var userInfo = _movieIpiService.GetUserInfo();
+            var userInfo = await _movieIpiService.GetUserInfo();
             return View(userInfo);
         }
     }

@@ -2,9 +2,13 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Net.Http;
+using System.Threading;
 using System.Threading.Tasks;
 using IdentityModel.Client;
+using Microsoft.AspNetCore.Authentication;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc.ModelBinding.Validation;
+using Microsoft.IdentityModel.Protocols.OpenIdConnect;
 using Movies.Client.Models;
 using Newtonsoft.Json;
 
@@ -13,15 +17,52 @@ namespace Movies.Client.ApiServices
     public class MovieIpiService : IMovieIpiService
     {
         private readonly IHttpClientFactory _httpClientFactory;
+        private readonly IHttpContextAccessor _httpContextAccessor;
 
-        public MovieIpiService(IHttpClientFactory httpClientFactory)
+        public MovieIpiService(IHttpClientFactory httpClientFactory, IHttpContextAccessor httpContextAccessor)
         {
-            _httpClientFactory = httpClientFactory;
+            _httpClientFactory = httpClientFactory ?? throw new ArgumentNullException(nameof(httpClientFactory));
+            _httpContextAccessor = httpContextAccessor ?? throw new ArgumentNullException(nameof(httpContextAccessor));
+        }
+
+        public async Task<UserInfoViewModel> GetUserInfo()
+        {
+            var idpClient = _httpClientFactory.CreateClient("IDPClient");
+            var metaDataResponse = await idpClient.GetDiscoveryDocumentAsync();
+            if (metaDataResponse.IsError)
+            {
+                throw new HttpRequestException("Something went wrong");
+            }
+
+            var accessToken = await _httpContextAccessor
+                .HttpContext.GetTokenAsync(OpenIdConnectParameterNames.AccessToken);
+
+            var userInfoResponse = await idpClient.GetUserInfoAsync(
+                new UserInfoRequest
+                {
+                    Address = metaDataResponse.UserInfoEndpoint,
+                    Token = accessToken
+                }
+            );
+
+            if (userInfoResponse.IsError)
+            {
+                throw new HttpRequestException("Something went wrong while getting user info");
+            }
+
+
+            var userInfoDictionary = new Dictionary<string, string>();
+            foreach (var claim in userInfoResponse.Claims)
+            {
+                userInfoDictionary.Add(claim.Type, claim.Value);
+            }
+
+            return new UserInfoViewModel(userInfoDictionary);
         }
 
         public async Task<IEnumerable<Movie>> GetMovies()
         {
-#region WAY 1
+            #region WAY 1
 
             var httpClient = _httpClientFactory.CreateClient("MovieAPIClient");
 
@@ -35,9 +76,9 @@ namespace Movies.Client.ApiServices
             var listMovie = JsonConvert.DeserializeObject<List<Movie>>(content);
             return listMovie;
 
-#endregion
+            #endregion
 
-#region WAY 2
+            #region WAY 2
 
             /* var apiClientCredentials = new ClientCredentialsTokenRequest
              {
@@ -105,7 +146,7 @@ namespace Movies.Client.ApiServices
 
                 return await Task.FromResult(movieList);*/
 
-#endregion
+            #endregion
 
         }
 
@@ -129,9 +170,6 @@ namespace Movies.Client.ApiServices
             throw new NotImplementedException();
         }
 
-        public string GetUserInfo()
-        {
-            throw new NotImplementedException();
-        }
+
     }
 }
